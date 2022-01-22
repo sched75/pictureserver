@@ -2,7 +2,17 @@
     "name": "pld/pictureserver",
     "type": "project",
     "require": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "psr/log": "^1.1",
+        "psr/http-message": "^1.0",
+        "psr/container": "^2.0",
+        "monolog/monolog": "^2.3",
+        "psr/http-factory": "^1.0",
+        "psr/cache": "^1.0",
+        "psr/event-dispatcher": "^1.0",
+        "twig/twig": "^3.3",
+        "slim/twig-view": "^3.2",
+        "slim/psr7": "^1.5"
     },
     "autoload": {
         "psr-4": {
