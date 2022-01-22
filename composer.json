@@ -2,7 +2,8 @@
     "name": "pld/pictureserver",
     "type": "project",
     "require": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "klein/klein": "^2.1"
     },
     "autoload": {
         "psr-4": {
