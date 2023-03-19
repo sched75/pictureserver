@@ -1,103 +1,51 @@
-digraph G {
-    rankdir=LR;
+digraph UML_Class_diagram {
+  node [shape=record];
 
-    // Database class
-    class Database {
-        .getInstance(): Database
-        .query(sql: string): mixed
-    }
+  /* Database class */
+  database [label="{Database|+connect() : void|+query(queryString: string) : array}"];
 
-    // User interface
-    interface User {
-        .getUsername(): string
-        .setUsername(username: string): void
-        .setPassword(password: string): void
-        .checkPassword(password: string): boolean
-    }
+  /* User class */
+  user [label="{User|+setUsername(username: string) : void|+getUsername() : string|+setPassword(password: string) : void|+getPassword() : string}"];
 
-    // Hashing trait
-    trait Hashing {
-        -hashPassword(password: string): string
-        -verifyPassword(password: string, hash: string): boolean
-    }
+  /* Hashing trait */
+  hashing [label="{Hashing|+hashPassword(password: string) : string|+verifyPassword(password: string, hash: string) : bool}"];
 
-    // Authentication interface
-    interface Authentication {
-        .login(username: string, password: string): boolean
-        .logout(): void
-        .isLoggedIn(): boolean
-    }
+  /* Authentication class */
+  authentication [label="{Authentication|+login(username: string, password: string) : bool|+logout() : void|+isAuthenticated() : bool}"];
 
-    // Mailer interface
-    interface Mailer {
-        .setFrom(from: string): void
-        .setTo(to: string): void
-        .setSubject(subject: string): void
-        .setBody(body: string): void
-        .send(): boolean
-    }
+  /* Mailer class */
+  mailer [label="{Mailer|+setFrom(from: string) : void|+setTo(to: string) : void|+setSubject(subject: string) : void|+setBody(body: string) : void|+send() : void}"];
 
-    // PasswordReset interface
-    interface PasswordReset {
-        .generateToken(): string
-        .validateToken(token: string): boolean
-        .sendResetEmail(email: string): boolean
-        .resetPassword(token: string, password: string): boolean
-    }
+  /* PasswordReset class */
+  password_reset [label="{PasswordReset|+generateToken(user: User) : string|+validateToken(user: User, token: string) : bool|+sendResetEmail(user: User, token: string) : void|+resetPassword(user: User, password: string) : void}"];
 
-    // User class
-    class UserImpl implements User {
-        -username: string
-        -passwordHash: string
-        .getUsername(): string
-        .setUsername(username: string): void
-        .setPassword(password: string): void
-        .checkPassword(password: string): boolean
-    }
-    UserImpl -> Hashing
+  /* Front Controller */
+  front_controller [label="{FrontController|+handleRequest(request: Request) : void}"];
 
-    // Authentication class
-    class AuthenticationImpl implements Authentication {
-        -user: User
-        -database: Database
-        .login(username: string, password: string): boolean
-        .logout(): void
-        .isLoggedIn(): boolean
-    }
-    AuthenticationImpl -> UserImpl
-    AuthenticationImpl -> Database
+  /* Request class */
+  request [label="{Request|+getMethod() : string|+getUri() : string|+getParameters() : array}"];
 
-    // Mailer class
-    class MailerImpl implements Mailer {
-        -from: string
-        -to: string
-        -subject: string
-        -body: string
-        .setFrom(from: string): void
-        .setTo(to: string): void
-        .setSubject(subject: string): void
-        .setBody(body: string): void
-        .send(): boolean
-    }
+  /* Connect Database to Authentication and PasswordReset */
+  database -> authentication;
+  database -> password_reset;
 
-    // PasswordReset class
-    class PasswordResetImpl implements PasswordReset {
-        -database: Database
-        -mailer: Mailer
-        .generateToken(): string
-        .validateToken(token: string): boolean
-        .sendResetEmail(email: string): boolean
-        .resetPassword(token: string, password: string): boolean
-    }
-    PasswordResetImpl -> Database
-    PasswordResetImpl -> MailerImpl
+  /* User uses Hashing trait */
+  user -> hashing;
 
-    // Front Controller class
-    class FrontController {
-        -authentication: Authentication
-        -passwordReset: PasswordReset
-        .handleRequest(): void
-    }
-    FrontController -> AuthenticationImpl
-    FrontController -> PasswordResetImpl
+  /* Authentication uses User and Hashing */
+  authentication -> user;
+  authentication -> hashing;
+
+  /* PasswordReset uses Database, User, Mailer, and Hashing */
+  password_reset -> database;
+  password_reset -> user;
+  password_reset -> mailer;
+  password_reset -> hashing;
+
+  /* Front Controller uses Authentication and PasswordReset */
+  front_controller -> authentication;
+  front_controller -> password_reset;
+
+  /* Request is used by Front Controller */
+  front_controller -> request;
 }
