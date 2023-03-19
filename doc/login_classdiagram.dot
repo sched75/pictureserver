@@ -1,5 +1,6 @@
-digraph UML_Class_diagram {
-  node [shape=record];
+digraph Login_Class_Diagram {
+  edge [arrowtail="empty", splines="ortho"];
+  node [shape=record, fontname="Bitstream Vera Sans", fontsize=8];
 
   /* Database class */
   database [label="{Database|+connect() : void|+query(queryString: string) : array}"];
@@ -26,26 +27,29 @@ digraph UML_Class_diagram {
   request [label="{Request|+getMethod() : string|+getUri() : string|+getParameters() : array}"];
 
   /* Connect Database to Authentication and PasswordReset */
-  database -> authentication [dir=both, arrowtail=diamond, arrowhead=odiamond];
-  database -> password_reset [dir=both, arrowtail=diamond, arrowhead=odiamond];
+  database -> authentication [arrowhead=diamond, dir=both];
+  database -> password_reset [arrowhead=diamond, dir=both];
 
-    /* User uses Hashing trait */
-  user -> hashing [arrowhead=onormal, dir=none];
+  /* User uses Hashing trait */
+  user -> hashing [dir=none];
 
   /* Authentication uses User and Hashing */
-  authentication -> user [arrowhead=vee, dir=none];
-  authentication -> hashing [arrowhead=vee, dir=none];
+  authentication -> user [arrowhead=triangle, dir=back];
+  authentication -> hashing [arrowhead=diamond, dir=back];
 
   /* PasswordReset uses Database, User, Mailer, and Hashing */
-  password_reset -> database [arrowhead=onormal, dir=none];
-  password_reset -> user [arrowhead=vee, dir=none];
-  password_reset -> mailer [arrowhead=vee, dir=none];
-  password_reset -> hashing [arrowhead=vee, dir=none];
+  password_reset -> database [arrowhead=diamond, dir=none];
+  password_reset -> user [arrowhead=triangle, dir=back];
+  password_reset -> mailer [arrowhead=diamond, dir=back];
+  password_reset -> hashing [arrowhead=diamond, dir=back];
 
   /* Front Controller uses Authentication and PasswordReset */
-  front_controller -> authentication [arrowhead=vee, dir=none];
-  front_controller -> password_reset [arrowhead=vee, dir=none];
+  front_controller -> authentication [arrowhead=triangle, dir=back];
+  front_controller -> password_reset [arrowhead=triangle, dir=back];
 
   /* Request is used by Front Controller */
-  front_controller -> request [arrowhead=vee, dir=none];
-  }
+  front_controller -> request [arrowhead=diamond, dir=none];
+
+  /* Add edge with arrowtail=empty */
+  mailer -> {user, request} [dir=none, arrowhead=diamond];
+}
