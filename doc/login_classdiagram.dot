@@ -26,26 +26,26 @@ digraph UML_Class_diagram {
   request [label="{Request|+getMethod() : string|+getUri() : string|+getParameters() : array}"];
 
   /* Connect Database to Authentication and PasswordReset */
-  database -> authentication;
-  database -> password_reset;
+  database -> authentication [dir=both, arrowtail=diamond, arrowhead=odiamond];
+  database -> password_reset [dir=both, arrowtail=diamond, arrowhead=odiamond];
 
   /* User uses Hashing trait */
-  user -> hashing;
+  user -> hashing [dir=none];
 
   /* Authentication uses User and Hashing */
-  authentication -> user;
-  authentication -> hashing;
+  authentication -> user [dir=none];
+  authentication -> hashing [dir=none];
 
   /* PasswordReset uses Database, User, Mailer, and Hashing */
-  password_reset -> database;
-  password_reset -> user;
-  password_reset -> mailer;
-  password_reset -> hashing;
+  password_reset -> database [dir=none];
+  password_reset -> user [dir=none];
+  password_reset -> mailer [dir=none];
+  password_reset -> hashing [dir=none];
 
   /* Front Controller uses Authentication and PasswordReset */
-  front_controller -> authentication;
-  front_controller -> password_reset;
+  front_controller -> authentication [dir=none];
+  front_controller -> password_reset [dir=none];
 
   /* Request is used by Front Controller */
-  front_controller -> request;
-}
+  front_controller -> request [dir=none];
+  }
