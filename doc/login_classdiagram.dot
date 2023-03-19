@@ -1,0 +1,103 @@
+digraph G {
+    rankdir=LR;
+
+    // Database class
+    class Database {
+        .getInstance(): Database
+        .query(sql: string): mixed
+    }
+
+    // User interface
+    interface User {
+        .getUsername(): string
+        .setUsername(username: string): void
+        .setPassword(password: string): void
+        .checkPassword(password: string): boolean
+    }
+
+    // Hashing trait
+    trait Hashing {
+        -hashPassword(password: string): string
+        -verifyPassword(password: string, hash: string): boolean
+    }
+
+    // Authentication interface
+    interface Authentication {
+        .login(username: string, password: string): boolean
+        .logout(): void
+        .isLoggedIn(): boolean
+    }
+
+    // Mailer interface
+    interface Mailer {
+        .setFrom(from: string): void
+        .setTo(to: string): void
+        .setSubject(subject: string): void
+        .setBody(body: string): void
+        .send(): boolean
+    }
+
+    // PasswordReset interface
+    interface PasswordReset {
+        .generateToken(): string
+        .validateToken(token: string): boolean
+        .sendResetEmail(email: string): boolean
+        .resetPassword(token: string, password: string): boolean
+    }
+
+    // User class
+    class UserImpl implements User {
+        -username: string
+        -passwordHash: string
+        .getUsername(): string
+        .setUsername(username: string): void
+        .setPassword(password: string): void
+        .checkPassword(password: string): boolean
+    }
+    UserImpl -> Hashing
+
+    // Authentication class
+    class AuthenticationImpl implements Authentication {
+        -user: User
+        -database: Database
+        .login(username: string, password: string): boolean
+        .logout(): void
+        .isLoggedIn(): boolean
+    }
+    AuthenticationImpl -> UserImpl
+    AuthenticationImpl -> Database
+
+    // Mailer class
+    class MailerImpl implements Mailer {
+        -from: string
+        -to: string
+        -subject: string
+        -body: string
+        .setFrom(from: string): void
+        .setTo(to: string): void
+        .setSubject(subject: string): void
+        .setBody(body: string): void
+        .send(): boolean
+    }
+
+    // PasswordReset class
+    class PasswordResetImpl implements PasswordReset {
+        -database: Database
+        -mailer: Mailer
+        .generateToken(): string
+        .validateToken(token: string): boolean
+        .sendResetEmail(email: string): boolean
+        .resetPassword(token: string, password: string): boolean
+    }
+    PasswordResetImpl -> Database
+    PasswordResetImpl -> MailerImpl
+
+    // Front Controller class
+    class FrontController {
+        -authentication: Authentication
+        -passwordReset: PasswordReset
+        .handleRequest(): void
+    }
+    FrontController -> AuthenticationImpl
+    FrontController -> PasswordResetImpl
+}
