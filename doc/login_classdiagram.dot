@@ -1,5 +1,5 @@
 digraph Login_Class_Diagram {
-  edge [arrowtail="empty", splines="ortho"];
+  edge [arrowtail="empty", splines=ortho];
   node [shape=record, fontname="Bitstream Vera Sans", fontsize=8];
 
   /* Database class */
@@ -27,29 +27,29 @@ digraph Login_Class_Diagram {
   request [label="{Request|+getMethod() : string|+getUri() : string|+getParameters() : array}"];
 
   /* Connect Database to Authentication and PasswordReset */
-  database -> authentication [arrowhead=diamond, dir=both];
-  database -> password_reset [arrowhead=diamond, dir=both];
+  database -> authentication [arrowhead=diamond, dir=both, splines=ortho];
+  database -> password_reset [arrowhead=diamond, dir=both, splines=ortho];
 
   /* User uses Hashing trait */
-  user -> hashing [dir=none];
+  user -> hashing [dir=none, splines=ortho];
 
   /* Authentication uses User and Hashing */
-  authentication -> user [arrowhead=triangle, dir=back];
-  authentication -> hashing [arrowhead=diamond, dir=back];
+  authentication -> user [arrowhead=triangle, dir=back, splines=ortho];
+  authentication -> hashing [arrowhead=diamond, dir=back, splines=ortho];
 
   /* PasswordReset uses Database, User, Mailer, and Hashing */
-  password_reset -> database [arrowhead=diamond, dir=none];
-  password_reset -> user [arrowhead=triangle, dir=back];
-  password_reset -> mailer [arrowhead=diamond, dir=back];
-  password_reset -> hashing [arrowhead=diamond, dir=back];
+  password_reset -> database [arrowhead=diamond, dir=none, splines=ortho];
+  password_reset -> user [arrowhead=triangle, dir=back, splines=ortho];
+  password_reset -> mailer [arrowhead=diamond, dir=back, splines=ortho];
+  password_reset -> hashing [arrowhead=diamond, dir=back, splines=ortho];
 
   /* Front Controller uses Authentication and PasswordReset */
-  front_controller -> authentication [arrowhead=triangle, dir=back];
-  front_controller -> password_reset [arrowhead=triangle, dir=back];
+  front_controller -> authentication [arrowhead=triangle, dir=back, splines=ortho];
+  front_controller -> password_reset [arrowhead=triangle, dir=back, splines=ortho];
 
   /* Request is used by Front Controller */
-  front_controller -> request [arrowhead=diamond, dir=none];
+  front_controller -> request [arrowhead=diamond, dir=none, splines=ortho];
 
   /* Add edge with arrowtail=empty */
-  mailer -> {user, request} [dir=none, arrowhead=diamond];
+  mailer -> {user, request} [dir=none, arrowhead=diamond, splines=ortho];
 }
